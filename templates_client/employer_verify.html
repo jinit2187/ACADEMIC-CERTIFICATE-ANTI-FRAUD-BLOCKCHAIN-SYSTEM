@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Employer Certificate Verification</title>
+
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/vendor/DataTables/css/datatables.min.css">
+    <link rel="stylesheet" href="/static/vendor/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a href="#" class="navbar-brand">Blockchain Client</a>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="/" class="nav-link">Wallet Generator</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/make/transaction" class="nav-link">Issue Certificate</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/view/transactions" class="nav-link">View Certificates</a>
+                </li>
+                <li class="nav-item active">
+                    <a href="/verify/certificate" class="nav-link">Employer Verify</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/student/wallet" class="nav-link">Student Wallet</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container" style="margin-top: 80px;">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Employer Certificate Verification</h3>
+            <p>
+                Upload a certificate PDF/image and select the blockchain node URL.
+                The system will hash the file and verify whether it exists on the academic certificate blockchain.
+            </p>
+        </div>
+    </div>
+
+    <div class="alert alert-secondary">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <label class="col-sm-2">Blockchain Node URL:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="node_url" class="form-control"
+                           value="{{ node_url or 'http://127.0.0.1:5001' }}">
+                </div>
+            </div>
+
+            <br>
+
+            <div class="row">
+                <label class="col-sm-2">Certificate File:</label>
+                <div class="col-sm-10">
+                    <input type="file" name="certificate_file" class="form-control">
+                </div>
+            </div>
+
+            <br>
+
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <button type="submit" class="btn btn-primary btn-lg">Verify Certificate</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-danger">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    {% if result %}
+        {% if result.valid %}
+            <div class="alert alert-success">
+                <h4>Certificate is VALID ✅</h4>
+                <p><strong>Certificate Hash:</strong> {{ result.certificate_hash }}</p>
+                <p><strong>Block Number:</strong> {{ result.block_number }}</p>
+                <hr>
+                <p><strong>Student Name:</strong> {{ result.certificate.student_name }}</p>
+                <p><strong>Degree:</strong> {{ result.certificate.degree }}</p>
+                <p><strong>Major:</strong> {{ result.certificate.major }}</p>
+                <p><strong>Date Issued:</strong> {{ result.certificate.date_issued }}</p>
+                <p><strong>Student Public Key:</strong> {{ result.certificate.student_public_key }}</p>
+                <p><strong>University Public Key:</strong> {{ result.certificate.university_public_key }}</p>
+
+                <hr>
+                <p>You may also download the original file from the issuing university (if available):</p>
+                <a class="btn btn-outline-secondary"
+                   href="/certificate/file/{{ result.certificate_hash }}">
+                    Download Certificate File
+                </a>
+            </div>
+        {% else %}
+            <div class="alert alert-warning">
+                <h4>Certificate is NOT found on the blockchain ❌</h4>
+                <p>{{ result.message }}</p>
+            </div>
+        {% endif %}
+    {% endif %}
+
+</div>
+
+<script src="/static/vendor/jquery/jquery.min.js"></script>
+<script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

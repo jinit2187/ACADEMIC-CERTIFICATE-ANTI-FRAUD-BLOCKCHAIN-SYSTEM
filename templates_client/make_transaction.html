@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Issue Certificate</title>
+
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/vendor/DataTables/css/datatables.min.css">
+    <link rel="stylesheet" href="/static/vendor/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a href="#" class="navbar-brand">Blockchain Client</a>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="/" class="nav-link">Wallet Generator</a>
+                </li>
+                <li class="nav-item active">
+                    <a href="/make/transaction" class="nav-link">Issue Certificate</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/view/transactions" class="nav-link">View Certificates</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/verify/certificate" class="nav-link">Employer Verify</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/student/wallet" class="nav-link">Student Wallet</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <div class="card-body">
+                <h4 class="card-title">Issue Academic Certificate</h4>
+                <p class="card-text">
+                    Enter certificate details, attach the original PDF/image and click on
+                    "Generate Certificate" to create a signed issuance request.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container alert alert-secondary">
+    <form id="certificate_form" enctype="multipart/form-data">
+        <div class="row">
+            <label class="col-sm-2">University Public Key:</label>
+            <div class="col-sm-10">
+                <input type="text" name="sender_public_key" id="sender_public_key" class="form-control">
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <label class="col-sm-2">University Private Key:</label>
+            <div class="col-sm-10">
+                <input type="text" name="sender_private_key" id="sender_private_key" class="form-control">
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <label class="col-sm-2">Student Public Key:</label>
+            <div class="col-sm-10">
+                <input type="text" name="recipient_public_key" id="recipient_public_key" class="form-control">
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <label class="col-sm-2">Student Name:</label>
+            <div class="col-sm-10">
+                <input type="text" name="student_name" id="student_name" class="form-control">
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <label class="col-sm-2">Degree:</label>
+            <div class="col-sm-10">
+                <input type="text" name="degree" id="degree" class="form-control">
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <label class="col-sm-2">Major:</label>
+            <div class="col-sm-10">
+                <input type="text" name="major" id="major" class="form-control">
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <label class="col-sm-2">Date Issued:</label>
+            <div class="col-sm-10">
+                <input type="date" name="date_issued" id="date_issued" class="form-control">
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <label class="col-sm-2">Certificate File (PDF/Image):</label>
+            <div class="col-sm-10">
+                <input type="file" name="certificate_file" id="certificate_file" class="form-control">
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <input type="button" name="generate_certificate" id="generate_certificate" class="btn btn-primary btn-lg" value="Generate Certificate">
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<!-- Modal -->
+<div class="modal modal-alert fade" id="basic_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <div class="modal-title col-md-10">
+            Confirm certificate details, enter a blockchain node URL and click on
+            "Confirm Certificate" to finalize issuance to the blockchain.
+        </div>
+        <button type="button" class="close col-md-2" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+
+      <div class="modal-body">
+
+        <form id="confirmation_certificate_form">
+
+            <div class="row">
+              <label class="col-sm-12">University Public Key:</label>
+              <div class="col-sm-12">
+                <input type="text" name="confirmation_university_public_key" id="confirmation_university_public_key" class="form-control" readonly>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="col-sm-12">Student Public Key:</label>
+              <div class="col-sm-12">
+                <input type="text" name="confirmation_student_public_key" id="confirmation_student_public_key" class="form-control" readonly>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="col-sm-12">Student Name:</label>
+              <div class="col-sm-12">
+                <input type="text" name="confirmation_student_name" id="confirmation_student_name" class="form-control" readonly>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="col-sm-12">Degree:</label>
+              <div class="col-sm-12">
+                <input type="text" name="confirmation_degree" id="confirmation_degree" class="form-control" readonly>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="col-sm-12">Major:</label>
+              <div class="col-sm-12">
+                <input type="text" name="confirmation_major" id="confirmation_major" class="form-control" readonly>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="col-sm-12">Date Issued:</label>
+              <div class="col-sm-12">
+                <input type="text" name="confirmation_date_issued" id="confirmation_date_issued" class="form-control" readonly>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="col-sm-12">Certificate Hash (SHA-256):</label>
+              <div class="col-sm-12">
+                <input type="text" name="confirmation_certificate_hash" id="confirmation_certificate_hash" class="form-control" readonly>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="col-sm-12">Certificate Signature:</label>
+              <div class="col-sm-12">
+                <input type="text" name="certificate_signature" id="certificate_signature" class="form-control" readonly>
+              </div>
+            </div>
+
+        </form>
+
+        <div class="row">
+          <label class="col-sm-12">Blockchain Node URL:</label>
+          <div class="col-sm-12">
+            <input type="text" name="node_url" id="node_url" class="form-control" value="http://127.0.0.1:5001">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="button" id="button_confirm_certificate" class="btn btn-success">Confirm Certificate</button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div class="modal modal-alert fade" id="success_certificate_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="alert alert-success" role="alert">
+          <h4 class="alert-heading">Certificate Submitted!</h4>
+          <p>Your certificate has been submitted to the selected node. It will be included in the next block.</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="confirm_certificate" class="btn btn-success" data-dismiss="modal">OK</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<script src="/static/vendor/jquery/jquery.min.js"></script>
+<script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/static/vendor/DataTables/js/datatables.min.js"></script>
+<script src="/static/vendor/DataTables/js/ellipsis.js"></script>
+
+<script>
+    $(function() {
+        $("#generate_certificate").click(function() {
+            var form = $('#certificate_form')[0];
+            var data = new FormData(form);
+
+            $.ajax({
+                url: "/generate/transaction",
+                type: "POST",
+                dataType: 'json',
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    const cert = response['certificate'];
+                    document.getElementById('confirmation_university_public_key').value = cert['university_public_key'];
+                    document.getElementById('confirmation_student_public_key').value = cert['student_public_key'];
+                    document.getElementById('confirmation_student_name').value = cert['student_name'];
+                    document.getElementById('confirmation_degree').value = cert['degree'];
+                    document.getElementById('confirmation_major').value = cert['major'];
+                    document.getElementById('confirmation_date_issued').value = cert['date_issued'];
+                    document.getElementById('confirmation_certificate_hash').value = cert['certificate_hash'];
+                    document.getElementById('certificate_signature').value = response['signature'];
+
+                    $('#basic_modal').modal('show');
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        $('#button_confirm_certificate').click(function() {
+            $.ajax({
+                url: document.getElementById('node_url').value + '/certificates/new',
+                type: 'POST',
+                dataType: 'json',
+                header: {'Access-Control-Allow-Origin': '*'},
+                data: $('#confirmation_certificate_form').serialize(),
+                success: function(response) {
+                    $('#basic_modal').modal('hide');
+                    $('#success_certificate_modal').modal('show');
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+
+            });
+        });
+
+    });
+
+</script>
+
+</body>
+</html>
